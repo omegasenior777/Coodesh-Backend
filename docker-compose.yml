@@ -1,0 +1,28 @@
+services:
+    app:
+        build:
+            context: .
+            dockerfile: Dockerfile
+        volumes:
+            - .:/var/www/html
+        ports:
+            - "9000:9000"
+        environment:
+            APP_ENV: local
+            APP_DEBUG: true
+            APP_KEY: base64:placeholder
+
+    web:
+        image: nginx:1.21
+        volumes:
+            - .:/var/www/html
+            - ./docker/nginx:/etc/nginx/conf.d
+        ports:
+            - "8080:80"
+        depends_on:
+            - app
+
+    db:
+        image: nouchka/sqlite3
+        volumes:
+            - ./database:/var/www/html/database

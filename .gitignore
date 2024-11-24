@@ -1,0 +1,49 @@
+# Diretório de sistema
+/.idea
+/.vscode
+/node_modules
+/vendor
+
+# Arquivos do sistema operacional
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Arquivos de logs e debug
+*.log
+*.env
+*.local
+/storage/logs/*
+/storage/framework/cache/*
+/storage/framework/sessions/*
+/storage/framework/views/*
+
+# Arquivos do Composer
+composer.lock
+
+# Arquivos do npm/yarn
+yarn.lock
+npm-debug.log*
+yarn-error.log*
+
+# Cache do Laravel
+/bootstrap/cache/*.php
+/public/storage
+/storage/*.sqlite
+
+# Chaves do IDE Helper (opcional)
+_ide_helper.php
+_ide_helper_models.php
+
+# Arquivos do PHPUnit
+/phpunit.result.cache
+
+# Docker (se estiver usando)
+docker-compose.override.yml
+.env.docker
+.env.testing
+
+# Outros
+.env
+.env.*
+*.sqlite
