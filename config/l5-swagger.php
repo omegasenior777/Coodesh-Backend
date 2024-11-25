@@ -10,12 +10,13 @@ return [
                 'version' => '1.0.0',
                 'basePath' => env('APP_URL'),
             ],
-
+            'generate_always' => true,
             'routes' => [
                 /*
                  * Route for accessing api documentation interface
                  */
                 'api' => 'api/documentation',
+                'docs' => 'docs',
             ],
             'paths' => [
                 'docs' => storage_path('api-docs'),

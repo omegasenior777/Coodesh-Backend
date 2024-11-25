@@ -40,9 +40,12 @@ class UserController extends Controller
             ->paginate(10);
 
         $results = $history->map(function ($item) {
+            // Verifica se 'viewed_at' é um objeto Carbon, se não, converte para um
+            $viewedAt = $item->viewed_at instanceof \Carbon\Carbon ? $item->viewed_at : \Carbon\Carbon::parse($item->viewed_at);
+
             return [
                 'word' => $item->word->word,
-                'added' => $item->viewed_at->toIso8601String(),
+                'added' => $viewedAt->toIso8601String(),
             ];
         });
 

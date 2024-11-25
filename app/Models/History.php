@@ -16,7 +16,6 @@ class History extends Model
         'word_id',
         'viewed_at',
     ];
-
     public function user()
     {
         return $this->belongsTo(User::class);

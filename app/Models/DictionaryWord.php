@@ -25,7 +25,7 @@ class DictionaryWord extends Model
     ];
     //protected $table = 'dictionary_words';
     protected $table = 'words';
-    public function histories()
+    public function history()
     {
         return $this->hasMany(History::class);
     }

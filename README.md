@@ -65,3 +65,5 @@ Para importar palavras através da api ``https://api.dictionaryapi.dev/api/v2/en
 ```
 docker run -v ${PWD}:/var/www/html -w /var/www/html php:8.2-cli php artisan dictionary:import
 ```
+
+** Base completa apenas para palavras inicadas por A ou B, devida a demora na importação.

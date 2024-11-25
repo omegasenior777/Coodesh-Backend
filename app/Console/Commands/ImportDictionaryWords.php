@@ -71,23 +71,28 @@ class ImportDictionaryWords extends Command
             return;
         }
 
-        $response = Http::get("https://api.dictionaryapi.dev/api/v2/entries/en/$word");
+        $response = Http::withOptions([
+            'verify' => false, // Desabilita a verificação SSL
+        ])->get("https://api.dictionaryapi.dev/api/v2/entries/en/$word");
 
-        $maxAttempts = 5;
+
+       // $maxAttempts = 5;
         if ($response->failed()) {
-            $this->error("Erro ao buscar a palavra '$word' (tentativa $attempt de $maxAttempts).");
-
-            if ($attempt < $maxAttempts) {
-                sleep(0.5);
-                $this->importWord($word, $attempt + 1);
-            } else {
-                $this->error("Limite de tentativas alcançado para a palavra '$word'.");
-            }
+            $this->error("Erro ao buscar a palavra '$word'."); //(tentativa $attempt de $maxAttempts)
+            $this->importWordFromFile($word);
+//            if ($attempt < $maxAttempts) {
+//                sleep(0.5);
+//                $this->importWord($word, $attempt + 1);
+//            } else {
+//                $this->error("Limite de tentativas alcançado para a palavra '$word'.");
+//
+//            }
 
             return;
         }
         if ($response->json('title') === 'No Definitions Found') {
             $this->error("A palavra '$word' não foi encontrada na API.");
+            $this->importWordFromFile($word);
             return;
         }
 
@@ -106,5 +111,36 @@ class ImportDictionaryWords extends Command
         }
 
         $this->info("Palavra '$word' importada com sucesso!");
+    }
+    private function importWordFromFile(string $word): void
+    {
+        // Carregar o conteúdo do arquivo JSON
+        $jsonContent = file_get_contents($this->filePath);
+        $words = json_decode($jsonContent, true); // Decodifica o JSON em um array associativo
+
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            $this->error("Erro ao ler o arquivo JSON: " . json_last_error_msg());
+            return;
+        }
+
+        // Verificar se a palavra está no arquivo JSON
+        if (isset($words[$word])) {
+            $this->info("Importando a palavra '$word' do arquivo JSON.");
+
+            // Inserir a palavra diretamente do arquivo JSON
+            DictionaryWord::updateOrCreate(
+                ['word' => $word],
+                [
+                    'phonetics' => json_encode($words[$word]['phonetics'] ?? []),
+                    'meanings' => json_encode($words[$word]['meanings'] ?? []),
+                    'license' => json_encode($words[$word]['license'] ?? null),
+                    'source_urls' => json_encode($words[$word]['sourceUrls'] ?? [])
+                ]
+            );
+
+            $this->info("Palavra '$word' importada com sucesso do arquivo JSON!");
+        } else {
+            $this->error("A palavra '$word' não foi encontrada no arquivo JSON.");
+        }
     }
 }

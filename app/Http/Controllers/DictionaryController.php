@@ -73,56 +73,55 @@ class DictionaryController extends Controller
             'hasPrev' => false,
         ]);
     }
-    public function favorite(Request $request)
+    public function favorite(Request $request, $word)
     {
-        $request->validate([
-            'word' => 'required|string|max:255',
-        ]);
+        // Busca a palavra no banco de dados
+        $wordRecord = DictionaryWord::where('word', $word)->first();
 
-        $word = Word::where('word', $request->input('word'))->first();
-
-        if (!$word) {
+        if (!$wordRecord) {
             return response()->json(['message' => 'Word not found'], 404);
         }
 
+        // Verifica se a palavra já foi favoritada pelo usuário
         $existingFavorite = Favorite::where('user_id', auth()->id())
-            ->where('word_id', $word->id)
+            ->where('word_id', $wordRecord->id)
             ->first();
 
         if ($existingFavorite) {
             return response()->json(['message' => 'Word is already favorited'], 400);
         }
 
+        // Adiciona a palavra aos favoritos
         Favorite::create([
             'user_id' => auth()->id(),
-            'word_id' => $word->id,
+            'word_id' => $wordRecord->id,
         ]);
 
         return response()->json(['message' => 'Word added to favorites'], 200);
     }
 
-    public function unfavorite(Request $request)
+    public function unfavorite(Request $request, $word)
     {
-        $request->validate([
-            'word' => 'required|string|max:255',
-        ]);
+        // Busca a palavra no banco de dados usando a palavra fornecida na URL
+        $wordRecord = DictionaryWord::where('word', $word)->first();
 
-        $word = Word::where('word', $request->input('word'))->first();
-
-        if (!$word) {
+        if (!$wordRecord) {
             return response()->json(['message' => 'Word not found'], 404);
         }
 
+        // Verifica se a palavra está favoritada pelo usuário
         $favorite = Favorite::where('user_id', auth()->id())
-            ->where('word_id', $word->id)
+            ->where('word_id', $wordRecord->id)
             ->first();
 
         if (!$favorite) {
             return response()->json(['message' => 'Word is not in favorites'], 400);
         }
 
+        // Remove a palavra dos favoritos
         $favorite->delete();
 
         return response()->json(['message' => 'Word removed from favorites'], 200);
     }
+
 }
