@@ -35,7 +35,7 @@ composer install
 php artisan serve
 ```
 
-**Tenha certeza de que possua pelo menos o `PHP 8.1` instalado na máquina.** 
+**Tenha certeza de que possua pelo menos o `PHP 8.2` instalado na máquina.** 
 
 Após isso, basta abrir no navegador na porta:
 ````
