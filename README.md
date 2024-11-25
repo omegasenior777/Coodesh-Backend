@@ -47,6 +47,8 @@ localhost:8000
 Para executar o projeto com docker, realize o clone do projeto e execute o seguinte comando dentro da pasta raíz do projeto:
 ```
 docker compose up
+docker-compose exec app chown -R www-data:www-data /var/www/html/database
+docker-compose exec app chmod -R 775 /var/www/html/database
 ```
 
 **Tenha certeza de que possua o `Docker` de seu sistema operacional instalado na máquina.**
