@@ -43,4 +43,3 @@ docker-compose.override.yml
 # Outros
 .env
 .env.*
-*.sqlite
