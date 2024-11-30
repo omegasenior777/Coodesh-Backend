@@ -16,13 +16,13 @@ WORKDIR /var/www/html
 COPY . .
 
 # Instala dependências do Laravel
-RUN composer install --optimize-autoloader --no-dev
+RUN composer install --optimize-autoloader --no-dev --prefer-dist
 
 # Define as permissões corretas para o storage e o cache do Laravel
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
 
-# Define o comando padrão para o container
-CMD ["php-fpm"]
-
 # Expõe a porta padrão do PHP-FPM
 EXPOSE 9000
+
+# Define o comando padrão para o container
+CMD ["php-fpm"]
